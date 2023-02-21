@@ -16,6 +16,7 @@ export interface User {
     nickname: string;
     name: string;
     password: string;
+    passwordConfirm: string;
     image: string;
     updatedAt?: string;
     createdAt?: string;

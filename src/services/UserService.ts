@@ -1,9 +1,9 @@
 import { Api } from "helpers/endpoints/Api";
 import { endpoint } from "helpers/endpoints";
-import { User, UserUpdate } from "types/api/user";
+import { User, UserResponse,UserUpdate } from "types/api/user";
 
 export const UserService = {
-  getLista: () =>
+  getLista: ():Promise<UserResponse[]> =>
     Api(endpoint.listUsers(), {
       method: "GET",
     }).then((response) => response.json()),

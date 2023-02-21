@@ -1,3 +1,4 @@
+
 import { ReactComponent as Pencil } from "assets/icons/edit.svg";
 import { useEffect, useState } from "react";
 import { User, UserResponse, UserUpdate } from "types/api/user";
@@ -5,16 +6,15 @@ import * as S from "./style";
 
 interface EditUserProps {
   user: UserResponse;
-  onCancel: boolean;
   onDelete: (data: UserResponse) => void;
   onEdit: (data: UserUpdate) => void;
+  onCancel: boolean;
 }
 
 const EditUser = ({ user, onCancel, onDelete, onEdit }: EditUserProps) => {
   const [isEditing, setIsEditing] = useState(false);
 
   const form = {
-    id: user.id,
     nick: user.nickname,
     name: user.name,
     image: user.image,
@@ -24,7 +24,8 @@ const EditUser = ({ user, onCancel, onDelete, onEdit }: EditUserProps) => {
 
   const [state, setState] = useState(form);
 
-  const userEditFormatter = (toFormat: typeof form): User => ({
+  const userEditFormatter = (toFormat: typeof form): UserResponse => ({
+    id: user.id,
     nickname: toFormat.nick,
     name: toFormat.name,
     password: toFormat.pass,
