@@ -1,0 +1,57 @@
+import * as S from "./style";
+import BoxLogin from "components/BoxLogin";
+import { useState } from "react";
+import { useMutation } from "react-query"
+import { useNavigate } from "react-router-dom";
+import { RoutePath } from "types/routes";
+import { AuthService } from "services/AuthService";
+import { Login as LoginData, LoginResponse } from "types/api/login";
+import { LocalStorageHelper } from "helpers/LocalStorageHelper";
+import { LocalStorageKeys } from "types/LocalStorageKeys";
+import { ErrorResponse } from "types/api/error";
+import { User } from "types/api/user";
+
+const Login = () => {
+
+	const [errorMessage, setErrorMessage] = useState('')
+	const navigate = useNavigate();
+
+	const mutation = useMutation(
+		AuthService.login, {
+		onSuccess: (data: LoginResponse & ErrorResponse) => {
+			if (data.statusCode) {
+				setErrorMessage(data.message)
+				return
+			}
+			if (data.token && data.user) {
+				LocalStorageHelper.set<string>(LocalStorageKeys.TOKEN, data.token)
+				LocalStorageHelper.set<User>(LocalStorageKeys.USER, data.user)
+				navigate(RoutePath.HOME)
+
+			}
+			setErrorMessage('Tente novamente!');
+		},
+		onError: () => {
+			setErrorMessage('Ocorreu um erro durante a requisição de login')
+		}
+	}
+	)
+
+	const handleSubmit = (data: LoginData) => {
+		mutation.mutate(data)
+		setErrorMessage("")
+	}
+
+	return (
+		<S.Login>
+			<S.LoginContent>
+				<BoxLogin
+					onSubmitData={handleSubmit}
+					errorMessage={errorMessage}
+				/>
+			</S.LoginContent>
+		</S.Login>
+	);
+};
+
+export default Login;
