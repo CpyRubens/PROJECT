@@ -1,4 +1,3 @@
-
 import { ReactComponent as Pencil } from "assets/icons/edit.svg";
 import { useEffect, useState } from "react";
 import { User, UserResponse, UserUpdate } from "types/api/user";
@@ -6,15 +5,16 @@ import * as S from "./style";
 
 interface EditUserProps {
   user: UserResponse;
+  onCancel: boolean;
   onDelete: (data: UserResponse) => void;
   onEdit: (data: UserUpdate) => void;
-  onCancel: boolean;
 }
 
 const EditUser = ({ user, onCancel, onDelete, onEdit }: EditUserProps) => {
   const [isEditing, setIsEditing] = useState(false);
 
   const form = {
+    id: user.id,
     nick: user.nickname,
     name: user.name,
     image: user.image,
@@ -24,8 +24,8 @@ const EditUser = ({ user, onCancel, onDelete, onEdit }: EditUserProps) => {
 
   const [state, setState] = useState(form);
 
-  const userEditFormatter = (toFormat: typeof form): UserResponse => ({
-    id: user.id,
+
+  const userEditFormatter = (toFormat: typeof form): User => ({
     nickname: toFormat.nick,
     name: toFormat.name,
     password: toFormat.pass,
@@ -55,10 +55,7 @@ const EditUser = ({ user, onCancel, onDelete, onEdit }: EditUserProps) => {
         <>
           <S.EditUserDetails>
             <S.EditUserDetailsImageWrap>
-              <S.EditUserDetailsImage
-                src={user.image}
-                alt={`Foto de ${user.name}`}
-              />
+              <S.EditUserDetailsImage src={user.image} alt={`Foto de ${user.name}`} />
             </S.EditUserDetailsImageWrap>
             <S.EditUserDetailsTitle>{user.name}</S.EditUserDetailsTitle>
             <S.EditUserDetailsText>
@@ -69,6 +66,7 @@ const EditUser = ({ user, onCancel, onDelete, onEdit }: EditUserProps) => {
           <S.EditUserAction onClick={() => onEditClick()}>
             <Pencil /> Editar
           </S.EditUserAction>
+
         </>
       ) : (
         <S.EditFormGroup>
@@ -92,11 +90,7 @@ const EditUser = ({ user, onCancel, onDelete, onEdit }: EditUserProps) => {
           />
           <S.EditForm
             type="password"
-            error={Boolean(
-              state.passConfirm.length &&
-                state.pass.length &&
-                state.pass !== state.passConfirm
-            )}
+            error={Boolean(state.passConfirm.length && state.pass.length && state.pass !== state.passConfirm)}
             placeholder="Confirmar senha"
             value={state.passConfirm}
             onChange={({ target }) => handleChange("passConfirm", target.value)}
@@ -112,6 +106,6 @@ const EditUser = ({ user, onCancel, onDelete, onEdit }: EditUserProps) => {
       )}
     </S.EditUser>
   );
-};
+}
 
 export default EditUser;
