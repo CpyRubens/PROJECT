@@ -36,5 +36,7 @@ export const UserService = {
   deleteById: (id: string) =>
     Api(endpoint.userById(id), {
       method: "DELETE",
-    }).then((response) => response.json()),
+    }).then((response) => {
+      return response.json()
+    }),
 };
